@@ -15,9 +15,21 @@ def prepare_training_data(rgb_path: str, masks_path: str):
     )
 
 @app.command(name="train")
-def train(training_data_path: str, hidden_neurons: int = 25, epochs: int = 10_000, learning_rate: float = 0.2):
+def train(
+    training_data_path: str,
+    trained_rna_path: str,
+    hidden_neurons: int = 25,
+    epochs: int = 10_000,
+    learning_rate: float = 0.2
+):
     rna = RNA(neuronas_ocultas=hidden_neurons)
-    train_rna(rna=rna, training_data_path=training_data_path, epochs=epochs, learning_rate=learning_rate)
+    train_rna(
+        rna=rna,
+        training_data_path=training_data_path,
+        trained_rna_path=trained_rna_path,
+        epochs=epochs,
+        learning_rate=learning_rate
+    )
 
 @app.command(name="inference")
 def predict(trained_rna_path: str, rgb_path: str):

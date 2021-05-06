@@ -4,7 +4,13 @@ from typing import Dict, Any
 from .tools import save_data, plot_costs
 
 
-def train_rna(rna, training_data_path: str, epochs: int, learning_rate: float):
+def train_rna(
+    rna,
+    training_data_path: str,
+    trained_rna_path: str,
+    epochs: int,
+    learning_rate: float
+):
     datos_de_entrenamiento: File = \
         File(training_data_path, "r")
 
@@ -36,4 +42,4 @@ def train_rna(rna, training_data_path: str, epochs: int, learning_rate: float):
         "costos": rna.costs_collection
     }
 
-    save_data("rna_entrenada_10_000.hdf5", metadatos)
+    save_data(trained_rna_path, metadatos)
