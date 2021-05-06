@@ -1,0 +1,6 @@
+numpy
+opencv-python
+h5py
+tqdm
+matplotlib
+typer
