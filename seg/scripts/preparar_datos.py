@@ -7,7 +7,7 @@ from tqdm import tqdm
 def prepare_data(ruta_de_imagenes_rgb: str, ruta_de_mascaras: str):
     ruta_de_imagenes_rgb: str = ruta_de_imagenes_rgb
     ruta_de_mascaras: str = ruta_de_mascaras
-    imagenes_rgb: List[str] = glob.glob(f"{ruta_de_imagenes_rgb}/*.png")
+    imagenes_rgb: List[str] = glob.glob(f"{ruta_de_imagenes_rgb}/*")
 
     STD_SIZE: Tuple[int] = (88, 72)
 
