@@ -1,0 +1,5 @@
+{
+    "var": "x",
+    "function": "exp(-x)",
+    "samples": 100
+}
