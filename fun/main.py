@@ -21,9 +21,9 @@ def prepare_training_data(specs_path: str):
 def train(
     training_data_path: str,
     trained_rna_path: str,
-    hidden_neurons: int = 5,
-    epochs: int = 10_000,
-    learning_rate: float = 0.2
+    hidden_neurons: int = 3,
+    epochs: int = 20_000,
+    learning_rate: float = 0.5
 ):
     rna = RNA(neuronas_ocultas=hidden_neurons)
     train_rna(
@@ -48,9 +48,9 @@ def predict(trained_rna_path: str, input_data_path: str):
     pred: numpy.ndarray = prediction(rna=rna, x0=x0)
     out_data = {
         "x0": x0.tolist(),
-        "preds": pred.tolist()
+        "Y": pred.tolist()
     }
-    with open("preds_20_000.json", "w") as f:
+    with open("output_data.json", "w") as f:
         f.write(json.dumps(out_data))
 
 if __name__ == "__main__":
