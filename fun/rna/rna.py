@@ -1,9 +1,11 @@
-import numpy
 from typing import (
     Dict,
     Union
 )
+
+import numpy
 from tqdm import tqdm
+
 
 class RNA:
     def __init__(self, neuronas_ocultas: int):

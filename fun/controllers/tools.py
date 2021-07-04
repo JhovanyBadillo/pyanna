@@ -1,9 +1,10 @@
-import h5py
 from typing import (
     Dict,
     Any,
     List
 )
+
+import h5py
 from matplotlib import pyplot
 
 

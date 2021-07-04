@@ -1,17 +1,23 @@
 from typing import (
     Tuple,
     Dict,
-    Any,
+    Union,
     Callable
 )
+
 import numpy
-from . import tools
 import sympy
 
-def prepare_data(specs: Dict[str, Any]):
+from . import tools
+
+
+def prepare_data(
+    specs: Dict[str, Union[str, int]],
+    fp="datos_de_entrenamiento.hdf5"
+):
     symbols: Tuple[sympy.Symbol] = (sympy.Symbol(specs['var']),)
     expr: str = specs['function']
-    fn: Callable[numpy.ndarray, numpy.ndarray] = sympy.lambdify(
+    fn: Callable[[numpy.ndarray], numpy.ndarray] = sympy.lambdify(
         args=symbols,
         expr=expr,
         modules='numpy'
@@ -21,6 +27,6 @@ def prepare_data(specs: Dict[str, Any]):
     Z: numpy.ndarray = fn(X)
 
     tools.save_data(
-        filename="datos_de_entrenamiento.hdf5", 
+        filename=fp, 
         data={"X": X, "Z": Z}
     )

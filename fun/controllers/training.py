@@ -1,7 +1,9 @@
+from typing import Dict, Any
+
 import numpy
 from h5py import File
-from typing import Dict, Any
-from .tools import save_data, plot_costs
+
+from . import tools
 
 
 def train_rna(
@@ -24,7 +26,7 @@ def train_rna(
 
     rna.train(epocas=epochs, eta=learning_rate)
 
-    plot_costs(rna.costs_collection)
+    tools.plot_costs(rna.costs_collection)
 
     parametros_finales: Dict[str, numpy.ndarray] = \
         rna.obtener_parametros_de_red()
@@ -42,4 +44,4 @@ def train_rna(
         "costos": rna.costs_collection
     }
 
-    save_data(trained_rna_path, metadatos)
+    tools.save_data(trained_rna_path, metadatos)
