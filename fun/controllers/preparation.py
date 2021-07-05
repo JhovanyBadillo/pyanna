@@ -13,7 +13,7 @@ from . import tools
 
 def prepare_data(
     specs: Dict[str, Union[str, int]],
-    fp="datos_de_entrenamiento.hdf5"
+    training_data_path: str
 ):
     symbols: Tuple[sympy.Symbol] = (sympy.Symbol(specs['var']),)
     expr: str = specs['function']
@@ -27,6 +27,6 @@ def prepare_data(
     Z: numpy.ndarray = fn(X)
 
     tools.save_data(
-        filename=fp, 
+        filename=training_data_path, 
         data={"X": X, "Z": Z}
     )

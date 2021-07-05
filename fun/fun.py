@@ -12,7 +12,10 @@ from controllers import *
 app = Typer()
 
 @app.command(name="prepare-training-data")
-def prepare_training_data(specs_path: str, training_data_path: str):
+def prepare_training_data(
+    specs_path: str = "fun_specs.json",
+    training_data_path: str = "training_data.hdf5"
+):
     with open(specs_path) as f:
         specs: Dict[str, Union[str, int]] = json.load(f)
     prepare_data(specs, training_data_path)
@@ -20,8 +23,8 @@ def prepare_training_data(specs_path: str, training_data_path: str):
 
 @app.command(name="train")
 def train(
-    training_data_path: str,
-    trained_rna_path: str,
+    training_data_path: str = "training_data.hdf5",
+    trained_rna_path: str = "trained_rna.hdf5",
     hidden_neurons: int = 3,
     epochs: int = 20_000,
     learning_rate: float = 0.5
@@ -38,9 +41,9 @@ def train(
 
 @app.command(name="predict")
 def predict(
-    trained_rna_path: str,
     input_data_path: str,
-    output_data_path: str
+    output_data_path: str,
+    trained_rna_path: str = "trained_rna.hdf5"
 ):
     with open(input_data_path, "r") as f:
         x0: numpy.ndarray = numpy.array(json.load(f)["x0"])
