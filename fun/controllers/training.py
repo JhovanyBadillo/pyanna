@@ -3,11 +3,12 @@ from typing import Dict, Any
 import numpy
 from h5py import File
 
+from rna import RNA
 from . import tools
 
 
 def train_rna(
-    rna,
+    rna: RNA,
     training_data_path: str,
     trained_rna_path: str,
     epochs: int,
