@@ -1,23 +1,31 @@
-import typer
-from h5py import File
-from src.rna import RNA
-from scripts.preparar_datos import prepare_data
-from scripts.entrenamiento import train_rna
-from scripts.inferencia import inference
+from typing import Optional
 
-app = typer.Typer()
+from typer import Typer
+from h5py import File
+
+from rna import RNA
+from controllers import *
+
+
+app = Typer()
 
 @app.command(name="prepare-training-data")
-def prepare_training_data(rgb_path: str, masks_path: str):
+def prepare_training_data(
+    rgb_path: str = "./rgb",
+    masks_path: str = "./masks",
+    training_data_path: str = "training_data.hdf5"
+):
     prepare_data(
         ruta_de_imagenes_rgb=rgb_path,
-        ruta_de_mascaras=masks_path
+        ruta_de_mascaras=masks_path,
+        training_data_path=training_data_path
     )
+
 
 @app.command(name="train")
 def train(
-    training_data_path: str,
-    trained_rna_path: str,
+    training_data_path: str = "training_data.hdf5",
+    trained_rna_path: str = "trained_rna.hdf5",
     hidden_neurons: int = 25,
     epochs: int = 10_000,
     learning_rate: float = 0.2
@@ -31,16 +39,24 @@ def train(
         learning_rate=learning_rate
     )
 
-@app.command(name="inference")
-def predict(trained_rna_path: str, rgb_path: str):
+
+@app.command(name="predict")
+def predict(
+    rgb_path: str,
+    mask_path: str,
+    trained_rna_path: str = "trained_rna.hdf5"
+):
     rna_parameters = {}
+
     with File(trained_rna_path, "r") as data:
         rna_parameters["W2"] = data["parametros_finales"]["W2"][()]
         rna_parameters["W1"] = data["parametros_finales"]["W1"][()]
         rna_parameters["b1"] = data["parametros_finales"]["b1"][()]
         rna_parameters["neuronas_ocultas"] = int(data["arq"]["neuronas_ocultas"][()])
-    rna = RNA.from_trained_rna(parametros_de_red=rna_parameters)
-    inference(rna=rna, rgb_path=rgb_path)
+
+    rna = RNA.from_previous_rna(parametros_de_red=rna_parameters)
+    prediction(rna=rna, rgb_path=rgb_path, mask_path=mask_path)
+
 
 if __name__ == "__main__":
     app()

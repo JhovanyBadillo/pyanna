@@ -1,11 +1,12 @@
-import numpy
-from h5py import File
 from typing import (
     Tuple,
     List,
     Dict,
     Any
 )
+
+import numpy
+from h5py import File
 from tqdm import tqdm
 
 
@@ -15,11 +16,17 @@ class RNA:
         self.W1: numpy.ndarray = numpy.random.rand(2, self.neuronas_ocultas)
         self.W2: numpy.ndarray = numpy.random.rand(self.neuronas_ocultas, 1)
         self.b1: numpy.ndarray = numpy.random.rand(self.neuronas_ocultas, 1)
+        self._L: int = None
+        self._R: int = None
+        self._J: int = None
+        self._X0: numpy.ndarray = None
+        self._Z: numpy.ndarray = None
+        self._B1: numpy.ndarray = None
         self.costs_collection: List[float] = []
 
     
     @classmethod
-    def from_trained_rna(cls, parametros_de_red: Dict[str, numpy.ndarray]):
+    def from_previous_rna(cls, parametros_de_red: Dict[str, numpy.ndarray]):
         rna_entrenada = cls(
             neuronas_ocultas=\
                 parametros_de_red["neuronas_ocultas"]
@@ -37,43 +44,51 @@ class RNA:
 
     @property
     def L(self) -> int:
+        if self._L is None:
+            raise Exception("Attribute _L is None")
         return self._L
     
     @L.setter
     def L(self, L: int):
-        self._L: int = L
-
+        self._L = L
+    
     @property
     def R(self) -> int:
+        if self._R is None:
+            raise Exception("Attribute _R is None")
         return self._R
     
-    @R.setter
-    def R(self, R: int):
-        self._R: int = R
-
     @property
     def J(self) -> int:
+        if self._J is None:
+            raise Exception("Attribute _J is None")
         return self._J
     
-    @J.setter
-    def J(self, J: int):
-        self._J: int = J
-
     @property
     def X0(self) -> numpy.ndarray:
+        if self._X0 is None:
+            raise Exception("Attribute _X0 is None")
         return self._X0
     
     @X0.setter
     def X0(self, X0: numpy.ndarray):
-        self._X0: numpy.ndarray = X0
-
+        self._X0 = X0
+    
     @property
     def Z(self) -> numpy.ndarray:
+        if self._Z is None:
+            raise Exception("Attribute _Z is None")
         return self._Z
+
+    @property
+    def B1(self) -> numpy.ndarray:
+        if self._B1 is None:
+            raise Exception("Attribute _B1 is None")
+        return self._B1
     
-    @Z.setter
-    def Z(self, Z: numpy.ndarray):
-        self._Z: numpy.ndarray = Z
+    @B1.setter
+    def B1(self, B1: numpy.ndarray):
+        self._B1 = B1
     
     @property
     def eta(self) -> float:
@@ -101,17 +116,17 @@ class RNA:
         return parametros_de_red
     
     def fit(self, X: numpy.ndarray, Z: numpy.ndarray):
-        self.R = Z.shape[0]
-        self.L = Z.shape[1]
-        self.J = self.L*self.R
-        self.X0 = numpy.hstack(
+        self._R = Z.shape[0]
+        self._L = Z.shape[1]
+        self._J = self.L*self.R
+        self._X0 = numpy.hstack(
             numpy.split(X, self.R)
         )/255.0
-        self.Z = numpy.hstack(
+        self._Z = numpy.hstack(
             numpy.split(Z, self.R)
         )
 
-        self.B1: numpy.ndarray = numpy.dot(
+        self._B1: numpy.ndarray = numpy.dot(
             self.b1,
             numpy.ones((1, self.J))
         )

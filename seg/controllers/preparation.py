@@ -1,10 +1,17 @@
 from typing import Tuple, List
-import numpy
 import glob
-from . import tools
+
+import numpy
 from tqdm import tqdm
 
-def prepare_data(ruta_de_imagenes_rgb: str, ruta_de_mascaras: str):
+from . import tools
+
+
+def prepare_data(
+    ruta_de_imagenes_rgb: str,
+    ruta_de_mascaras: str,
+    training_data_path: str
+):
     ruta_de_imagenes_rgb: str = ruta_de_imagenes_rgb
     ruta_de_mascaras: str = ruta_de_mascaras
     imagenes_rgb: List[str] = glob.glob(f"{ruta_de_imagenes_rgb}/*")
@@ -20,6 +27,7 @@ def prepare_data(ruta_de_imagenes_rgb: str, ruta_de_mascaras: str):
         total=len(imagenes_rgb),
         unit="imagen"
     )
+
     for imagen in imagenes_rgb:
         nombre_de_archivo: str = imagen.split('/')[-1]
         imagen_bgr: numpy.ndarray = tools.load_BGR_image(
@@ -52,6 +60,6 @@ def prepare_data(ruta_de_imagenes_rgb: str, ruta_de_mascaras: str):
     Z: numpy.ndarray = numpy.vstack(mascaras_procesadas)
 
     tools.save_data(
-        filename="datos_de_entrenamiento.hdf5", 
+        filename=training_data_path, 
         data={"X": X, "Z": Z}
     )
